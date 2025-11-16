@@ -12,8 +12,6 @@ const Category: React.FC = () => {
     limit,
   });
 
-  console.log(data?.data.result);
-
   const categories: CategoryType[] = data?.data.result.items || [];
   const pagination = data?.data.result.pagination;
 

@@ -48,7 +48,6 @@ const CreateTransactionButton = () => {
     limit: 100,
     type: watchType as CategoryKind | undefined,
   });
-  console.log(categoriesRes?.data);
 
   const categories: CategoryType[] = categoriesRes?.data.result.items || [];
 

@@ -3,8 +3,8 @@ import http from "@/utils/https";
 
 export const AUTH = {
     ME: "/users/me",
+    REFRESH_TOKEN: "/users/refresh-token",
     LOGOUT: "/users/logout",
-    REFRESH: "/users/refresh-token"
 };
 
 const authApi = {
@@ -27,17 +27,6 @@ const authApi = {
         });
     },
 
-
-    refreshToken(refreshToken: string) {
-        return http.post<{
-            result: {
-                access_token: string;
-                refresh_token: string;
-            };
-        }>(AUTH.REFRESH, {
-            refresh_token: refreshToken
-        });
-    }
 };
 
 export default authApi;

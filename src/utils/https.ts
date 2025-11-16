@@ -78,9 +78,12 @@ export class Http {
           !retryableStatuses.includes(error.response?.status as number)
         ) {
 
+
+
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
           const message = data?.message || error.message
+
 
 
           addNotification({
@@ -92,6 +95,7 @@ export class Http {
         }
 
         if (isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error)) {
+
 
 
           const config = error.response?.config || { headers: {}, url: '' }
@@ -155,23 +159,29 @@ export class Http {
   private handleRefreshToken() {
 
 
+
     return this.instance
-      .post(PRIVATE_ROUTES.refreshToken, {
-        refreshToken: this.refreshToken
+      .post(AUTH.REFRESH_TOKEN, {
+        refresh_token: this.refreshToken
       })
       .then((res) => {
 
 
-        const { accessToken, refreshToken } = res.data
 
-        setRefreshTokenToLS(refreshToken)
-        setAccessTokenToLS(accessToken)
-        this.accessToken = accessToken
-        this.refreshToken = refreshToken
 
-        return accessToken
+        const { access_token, refresh_token } = res.data
+
+        setRefreshTokenToLS(refresh_token)
+        setAccessTokenToLS(access_token)
+        this.accessToken = access_token
+        this.refreshToken = refresh_token
+
+        return access_token
       })
       .catch((error) => {
+
+
+
         clearLS()
         this.accessToken = ''
         this.refreshToken = ''

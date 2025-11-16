@@ -20,8 +20,9 @@ export function isAxiosForbiddenError<ForbiddenError>(error: unknown): error is 
 export function isAxiosExpiredTokenError<UnauthorizedError>(error: AxiosErrorResponse<ErrorResponse<UnauthorizedError>>): error is AxiosErrorResponse<ErrorResponse<UnauthorizedError>> {
 
   return (
-    isAxiosUnauthorizedError<ErrorResponse<string>>(error) &&
-    error.response?.data?.error === 'Error.InvalidAccessToken'
+
+    isAxiosUnauthorizedError<{ message: string }>(error) &&
+    error.response?.data?.message === 'Jwt expired'
   )
 }
 

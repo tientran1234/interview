@@ -8,10 +8,6 @@ const Google = () => {
   const [searchParams] = useSearchParams();
   const { setIsAuthenticated } = useAppStore();
   const navigate = useNavigate();
-  console.log(
-    searchParams.get("refresh_token"),
-    searchParams.get("access_token")
-  );
 
   useEffect(() => {
     if (

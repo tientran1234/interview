@@ -12,8 +12,6 @@ const Wallet: React.FC = () => {
     limit,
   });
 
-  console.log(data?.data.result);
-
   const wallets: WalletType[] = data?.data.result.items || [];
   const pagination = data?.data?.result.pagination;
 
