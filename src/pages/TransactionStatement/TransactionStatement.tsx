@@ -6,7 +6,7 @@ import { useGetTransactionStatement } from "@/hooks/useTransaction";
 
 import type { WalletType } from "@/types/wallets.type";
 import type { CategoryType, CategoryKind } from "@/types/categories.type";
-import type { GetTransactionStatement } from "@/schema/transaction.schema";
+import type { StatementResult } from "@/types/statement.type";
 
 const TransactionStatement: React.FC = () => {
   const [walletId, setWalletId] = useState<string>("");
@@ -44,7 +44,7 @@ const TransactionStatement: React.FC = () => {
       enabled: false,
     });
 
-  const statement: GetTransactionStatement | undefined = data?.data.data;
+  const statement: StatementResult | undefined = data?.data.data;
 
   const handleViewStatement = () => {
     if (!walletId || !fromDate || !toDate) return;
@@ -53,7 +53,7 @@ const TransactionStatement: React.FC = () => {
 
   return (
     <div style={{ marginTop: 24 }}>
-      <h2>Sao kê giao dịch</h2>
+      <h2 style={{ marginBottom: 8 }}>Sao kê giao dịch</h2>
 
       {/* Bộ lọc */}
       <div
@@ -67,7 +67,7 @@ const TransactionStatement: React.FC = () => {
         }}
       >
         <div>
-          <label>Ví: </label>
+          <label style={{ marginRight: 4 }}>Ví:</label>
           <select
             value={walletId}
             onChange={(e) => setWalletId(e.target.value)}
@@ -82,7 +82,7 @@ const TransactionStatement: React.FC = () => {
         </div>
 
         <div>
-          <label>Từ ngày: </label>
+          <label style={{ marginRight: 4 }}>Từ ngày:</label>
           <input
             type="date"
             value={fromDate}
@@ -91,7 +91,7 @@ const TransactionStatement: React.FC = () => {
         </div>
 
         <div>
-          <label>Đến ngày: </label>
+          <label style={{ marginRight: 4 }}>Đến ngày:</label>
           <input
             type="date"
             value={toDate}
@@ -144,7 +144,7 @@ const TransactionStatement: React.FC = () => {
 
             <div>
               <strong>Số dư hiện tại:</strong>{" "}
-              {statement.wallet.current_balance.toLocaleString("vi-VN")}
+              {statement.wallet.current_balance?.toLocaleString("vi-VN")}
             </div>
           </div>
 
@@ -192,6 +192,8 @@ const TransactionStatement: React.FC = () => {
                   <th style={thStyle}>Danh mục</th>
                   <th style={thStyle}>Loại</th>
                   <th style={thStyleRight}>Số tiền</th>
+                  <th style={thStyleRight}>Số dư đầu kỳ</th>
+                  <th style={thStyleRight}>Số dư cuối kỳ</th>
                   <th style={thStyle}>Ghi chú</th>
                 </tr>
               </thead>
@@ -202,6 +204,8 @@ const TransactionStatement: React.FC = () => {
                     ? categoryMap[String(t.category_id)]
                     : undefined;
 
+                  const isIncome = t.type === "income";
+
                   return (
                     <tr key={String(t._id)}>
                       <td style={tdStyleCenter}>
@@ -210,12 +214,31 @@ const TransactionStatement: React.FC = () => {
 
                       <td style={tdStyleCenter}>{categoryInfo?.name || "-"}</td>
 
-                      <td style={tdStyleCenter}>
-                        {t.type === "income" ? "Thu" : "Chi"}
+                      <td
+                        style={{
+                          ...tdStyleCenter,
+                          color: isIncome ? "green" : "red",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {isIncome ? "Thu" : "Chi"}
+                      </td>
+
+                      <td
+                        style={{
+                          ...tdStyleRight,
+                          color: isIncome ? "green" : "red",
+                        }}
+                      >
+                        {t.amount.toLocaleString("vi-VN")}
                       </td>
 
                       <td style={tdStyleRight}>
-                        {t.amount.toLocaleString("vi-VN")}
+                        {t.opening_balance?.toLocaleString("vi-VN")}
+                      </td>
+
+                      <td style={tdStyleRight}>
+                        {t.closing_balance?.toLocaleString("vi-VN")}
                       </td>
 
                       <td style={tdStyleCenter}>{t.description || "-"}</td>
@@ -236,6 +259,7 @@ const thStyle = {
   borderBottom: "1px solid #ddd",
   textAlign: "center" as const,
   padding: 8,
+  backgroundColor: "#fafafa",
 };
 
 const thStyleRight = {
@@ -247,12 +271,14 @@ const tdStyleCenter = {
   borderBottom: "1px solid #f0f0f0",
   padding: 8,
   textAlign: "center" as const,
+  fontSize: 14,
 };
 
 const tdStyleRight = {
   borderBottom: "1px solid #f0f0f0",
   padding: 8,
   textAlign: "right" as const,
+  fontSize: 14,
 };
 
 export default TransactionStatement;

@@ -1,5 +1,6 @@
 
-import type { CreateTransactionType, GetTransactionStatement, GetTransactionStatementQuery, TransactionKind, TransactionType } from "@/schema/transaction.schema";
+import type { CreateTransactionType, GetTransactionStatementQuery, TransactionKind, TransactionType } from "@/schema/transaction.schema";
+import type { StatementResult } from "@/types/statement.type";
 import type { Pagination } from "@/types/utils.type";
 
 import http from "@/utils/https";
@@ -36,7 +37,7 @@ const transactionApi = {
     },
     getStatement(query: GetTransactionStatementQuery) {
         return http.get<{
-            data: GetTransactionStatement
+            data: StatementResult
         }>
             (buildQueryURL(`${TRANSACTIONS}/statement`, query));
     }
